@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ "THE CAKE-WARE LICENSE" (Revision 42):                                   ~
+  ~                                                                          ~
+  ~     Milfie <mail@milfie.uu.me> wrote this file. As long as you retain    ~
+  ~ this notice you can do whatever you want with this stuff. If we meet     ~
+  ~ some day, and you think this stuff is worth it, you must buy me a cake   ~
+  ~ in return.                                                               ~
+  ~                                                                          ~
+  ~     Milfie.                                                              ~
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+   <comment>JSR-303 Bean Validation default messages</comment>
+   <entry key = "javax.validation.constraints.Null.message">
+      Value must be null.
+   </entry>
+   <entry key = "javax.validation.constraints.NotNull.message">
+      Value must not be null.
+   </entry>
+   <entry key = "javax.validation.constraints.AssertTrue.message">
+      Value must be true.
+   </entry>
+   <entry key = "javax.validation.constraints.AssertFalse.message">
+      Value must be false.
+   </entry>
+   <entry key = "javax.validation.constraints.Min.message">
+      Value must be greater than or equal to {value}.
+   </entry>
+   <entry key = "javax.validation.constraints.Max.message">
+      Value must be less than or equal to {value}.
+   </entry>
+   <entry key = "javax.validation.constraints.Size.message">
+      The size must be between {min} and {max}.
+   </entry>
+   <entry key = "javax.validation.constraints.Digits.message">
+      Numeric value out of bounds (&lt;{integer} digits&gt;.&lt;{fraction} digits&gt; expected).
+   </entry>
+   <entry key = "javax.validation.constraints.Past.message">
+      Value must be a past date.
+   </entry>
+   <entry key = "javax.validation.constraints.Future.message">
+      Value must be a future date.
+   </entry>
+   <entry key = "javax.validation.constraints.Pattern.message">
+      Value must match the following regular expression: {regexp}
+   </entry>
+</properties>

@@ -1,0 +1,367 @@
+/*****************************************************************************
+ *  "THE CAKE-WARE LICENSE" (Revision 41):                                   *
+ *                                                                           *
+ *      Milfeulle <mail@milfie.uu.me> wrote this file. As long as you        *
+ *  retain this notice you can do whatever you want with this stuff. If we   *
+ *  meet some day, and you think this stuff is worth it, you can buy me      *
+ *  a cake in return.                                                        *
+ *                                                                           *
+ *      Milfie                                                               *
+ *****************************************************************************/
+
+/*****************************************************************************
+ *  Default                                                                  *
+ *****************************************************************************/
+
+* {
+   box-sizing: border-box;
+   margin:     0;
+   padding:    0;
+   position:   relative;
+}
+HTML,
+BODY {
+   background-color: ivory;
+   font-size:        12pt;
+   overflow:         hidden;
+}
+BODY {
+   padding: 2.5pt 5pt;
+}
+
+TABLE {
+   border:          0 solid black;
+   border-collapse: collapse;
+}
+TH, TD {
+   vertical-align: middle;
+}
+TH {
+   text-align: center;
+}
+TD {
+   text-align: left;
+}
+INPUT {
+   padding: 1pt 2.5pt;
+}
+INPUT[type=submit] {
+   padding: 1pt 10pt;
+}
+
+/*****************************************************************************
+ *  Generic                                                                  *
+ *****************************************************************************/
+
+.left, TR.left > TD {
+   text-align: left;
+}
+.center, TR.center > TD {
+   text-align: center;
+}
+.right, TR.right > TD {
+   text-align: right;
+}
+
+.top, TR.top > TD {
+   vertical-align: top;
+}
+.middle, TR.middle > TD {
+   vertical-align: middle;
+}
+.bottom, TR.bottom > TD {
+   vertical-align: bottom;
+}
+
+.nonewidth, TR.nonewidth > TD {
+   width:       1%;
+   white-space: nowrap;
+}
+.thirdwidth, TR.thirdwidth > TD {
+   width:       33%;
+   white-space: nowrap;
+}
+.quartwidth, TR.quartwidth > TD {
+   width:       25%;
+   white-space: nowrap;
+}
+.halfwidth, TR.halfwidth > TD {
+   width:       50%;
+   white-space: nowrap;
+}
+.fullwidth, TR.fullwidth > TD {
+   width: 99%;
+}
+
+/*****************************************************************************
+ *  Main template                                                            *
+ *****************************************************************************/
+
+.app-view {
+   display:        flex;
+   flex-direction: column;
+   position:       fixed;
+   top:            0;
+   bottom:         0;
+   left:           0;
+   right:          0;
+}
+.app-header,
+.app-footer {
+   flex:             0 0 auto;
+   font-size:        125%;
+   font-weight:      bold;
+   padding:          6pt 20pt;
+   border:           1.5pt solid lightsalmon;
+   background-color: lightpink;
+   text-align:       center;
+   vertical-align:   top;
+   z-index:          1;
+}
+.app-main,
+.app-spacer {
+   flex: 1 0 auto;
+}
+.app-main {
+   display:        flex;
+   flex-direction: row;
+   position:       fixed;
+   top:            35pt;
+   left:           0;
+   bottom:         35pt;
+   right:          0;
+   overflow-y:     auto;
+}
+.main-left,
+.main-center,
+.main-right {
+   margin:     10pt 0;
+   padding:    0 10pt;
+   overflow-x: hidden;
+   overflow-y: auto;
+   position:   relative;
+   z-index:    1;
+}
+.main-center {
+   flex: 1 0 0%;
+}
+.main-left,
+.main-right {
+   flex: 0 0 22%;
+}
+
+/*****************************************************************************
+ *  Form table                                                               *
+ *****************************************************************************/
+
+TABLE.component-form {
+   border:           1.5pt solid lightsalmon;
+   background-color: lavenderblush;
+   text-align:       center;
+   width:            100%;
+}
+TABLE.component-form > CAPTION {
+   display:          block;
+   border:           0;
+   border-bottom:    1.5pt solid lightsalmon;
+   background-color: lightpink;
+   text-align:       center;
+   font-size:        100%;
+   font-weight:      bold;
+   white-space:      nowrap;
+}
+TABLE.component-form > CAPTION,
+TABLE.component-form > * > * > TH,
+TABLE.component-form > * > * > TD {
+   padding: 2.5pt 5pt;
+}
+
+/*****************************************************************************
+ *  Grid table                                                               *
+ *****************************************************************************/
+
+TABLE.form-grid {
+   border-width: 0;
+   width:        100%;
+}
+TABLE.form-grid > CAPTION,
+TABLE.form-grid > * > * > TH,
+TABLE.form-grid > * > * > TD {
+   padding: 2.5pt 5pt;
+}
+
+/*****************************************************************************
+ *  List table                                                               *
+ *****************************************************************************/
+
+TABLE.list-grid {
+   background-color: mintcream;
+   width:            100%;
+   table-layout:     fixed;
+}
+TABLE.list-grid > * > * > TH,
+TABLE.list-grid > * > * > TD {
+   border:        0;
+   padding:       2.5pt 5pt;
+   overflow:      hidden;
+   text-overflow: ellipsis;
+}
+TABLE.list-grid > * > * > TH {
+   background-color: paleturquoise;
+}
+TABLE.list-grid > * > TR + TR {
+   border-top: 1.5pt solid paleturquoise;
+}
+TABLE.list-grid > * > * > TH + TH,
+TABLE.list-grid > * > * > TD + TD {
+   border-left: 1.5pt solid paleturquoise;
+}
+
+/*****************************************************************************
+ *  Menu table                                                               *
+ *****************************************************************************/
+
+.menu .fullwidth > * {
+   width: 99%;
+}
+
+/*****************************************************************************
+ *  Screen                                                                   *
+ *****************************************************************************/
+
+.screen {
+   width: 100%;
+}
+.screen-main {
+   display:        flex;
+   flex-direction: column;
+   align-items:    center;
+}
+.screen-state {
+   width:          100%;
+   padding-left:   5pt;
+   vertical-align: top;
+}
+
+/*****************************************************************************
+ *  Canvas                                                                   *
+ *****************************************************************************/
+
+.canvas {
+   border:       1.5pt solid lightsalmon;
+   table-layout: fixed;
+}
+.canvas, .canvas TD {
+   background-color: white;
+   color:            grey;
+}
+.canvas TD {
+   padding: 1px;
+}
+.canvas TD > DIV {
+   width:  20pt;
+   height: 20pt;
+}
+.canvas .white {
+   background-color: white;
+}
+.canvas .black {
+   background-color: black;
+}
+
+/*****************************************************************************
+ *  Canvas curtain                                                           *
+ *****************************************************************************/
+
+.canvas-curtain,
+.canvas-curtain-blinder {
+   position:   absolute;
+   width:      100%;
+   height:     100%;
+   z-index:    9999;
+}
+.canvas-curtain {
+   display:         flex;
+   align-items:     center;
+   justify-content: center;
+}
+.canvas-curtain-blinder {
+   background: lavenderblush;
+   opacity:    0.66;
+   top:        0;
+   left:       0;
+   bottom:     0;
+   right:      0;
+}
+.canvas-curtain-message {
+   flex:          0 1 auto;
+   background:    lavenderblush;
+   border:        1.5pt solid lightsalmon;
+   border-radius: 3pt;
+   font-size:     1.5em;
+   font-weight:   bold;
+   text-align:    center;
+   padding:       10pt 25pt;
+   z-index:       9999;
+}
+
+/*****************************************************************************
+ *  State                                                                   *
+ *****************************************************************************/
+
+.state-brick {
+   background-color: white;
+   border:           1.5pt solid lightsalmon;
+   table-layout:     fixed;
+}
+.state-brick TD > DIV {
+   width:  15pt;
+   height: 15pt;
+}
+.state-brick TD {
+   padding: 1px;
+}
+.state-brick .white {
+   background-color: white;
+}
+.state-brick .black {
+   background-color: black;
+}
+
+.state-brick + .state-rank {
+   margin-top: 5pt;
+}
+.state-rank,
+.state-rank TD {
+   padding: 2.5pt 5pt 2.5pt 0;
+}
+
+/*****************************************************************************
+ *  Error messages                                                           *
+ *****************************************************************************/
+
+.jsf-messages {
+   width:        100%;
+   border:       none;
+   padding:      0;
+   margin:       0;
+   table-layout: fixed;
+}
+
+.jsf-messages TH,
+.jsf-messages TD {
+   text-align: center;
+   padding:    2.5pt 5pt;
+}
+.jsf-messages-error, TR.jsf-messages-error > TD {
+   background-color: lemonchiffon;
+   color:            red;
+   display:          block;
+   text-align:       center;
+}
+.jsf-messages-error-field {
+   background-color: lemonchiffon;
+   color:            red;
+   display:          block;
+   text-align:       left;
+}

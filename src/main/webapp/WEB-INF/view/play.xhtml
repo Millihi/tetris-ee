@@ -1,0 +1,133 @@
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ "THE CAKE-WARE LICENSE" (Revision 42):                                   ~
+  ~                                                                          ~
+  ~     Milfie <mail@milfie.uu.me> wrote this file. As long as you retain    ~
+  ~ this notice you can do whatever you want with this stuff. If we meet     ~
+  ~ some day, and you think this stuff is worth it, you must buy me a cake   ~
+  ~ in return.                                                               ~
+  ~                                                                          ~
+  ~     Milfie.                                                              ~
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:c="http://xmlns.jcp.org/jsp/jstl/core"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+   <h:outputScript
+      target="head" library="default" name="js/jquery-1.12.4.js" />
+   <h:outputScript
+      target="head" library="default" name="js/timer_utils.js" />
+   <h:outputScript
+      target="head" library="default" name="js/byte_buffer.js" />
+   <h:outputScript
+      target="head" library="default" name="js/datatype_converter.js" />
+   <h:outputScript
+      target="head" library="default" name="js/rpc.js" />
+   <h:outputScript
+      target="head" library="default" name="js/canvas.js" />
+   <h:outputScript
+      target="head" library="default" name="js/keyboard.js" />
+   <h:outputScript
+      target="head" library="default" name="js/endpoint.js" />
+   <h:outputScript
+      target="head" library="default" name="js/model.js" />
+   <h:outputScript
+      target="head" library="default" name="js/control.js" />
+   <h:outputScript
+      target="head" library="default" name="js/state.js" />
+   <h:outputScript
+      target="head" library="default" name="js/app_context.js" />
+
+   <h:panelGrid styleClass="component-form"
+                columns="1"
+                columnClasses="center">
+
+      <f:facet name="caption">
+         <h:outputText value="#{gbms['ui.play.caption']}" />
+      </f:facet>
+
+      <h:messages layout="table"
+                  styleClass="jsf-messages"
+                  errorClass="jsf-messages-error"
+                  globalOnly="true"
+                  showDetail="false"
+                  showSummary="true" />
+
+      <h:panelGrid styleClass="screen"
+                   columns="2"
+                   columnClasses="screen-main,screen-state">
+
+         <h:panelGroup>
+
+            <h:panelGroup layout="block" class="canvas-curtain">
+               <h:panelGroup layout="block" class="canvas-curtain-blinder" />
+               <h:panelGroup layout="block" class="canvas-curtain-message" />
+            </h:panelGroup>
+
+            <h:panelGrid styleClass="canvas"
+                         columns="#{gameController.state.width}">
+               <c:forEach begin="1"
+                          end="#{gameController.state.width *
+                                 gameController.state.height}">
+                  <h:panelGroup layout="block" styleClass="cell-inner" />
+               </c:forEach>
+            </h:panelGrid>
+
+         </h:panelGroup>
+         <h:panelGroup>
+
+            <h:panelGrid styleClass="state-brick" columns="4">
+               <c:forEach begin="1" end="#{4 * 4}">
+                  <h:panelGroup layout="block" styleClass="cell-inner" />
+               </c:forEach>
+            </h:panelGrid>
+
+            <h:panelGrid styleClass="state-rank"
+                         rowClasses="rank-score,rank-level,rank-combo"
+                         columns="2"
+                         columnClasses="label,value">
+
+               <h:outputText value="#{gbms['ui.play.score']}:" />
+               <h:outputText value="0" />
+
+               <h:outputText value="#{gbms['ui.play.level']}:" />
+               <h:outputText value="1" />
+
+               <h:outputText value="#{gbms['ui.play.combo']}:" />
+               <h:outputText value="0" />
+
+            </h:panelGrid>
+
+            <h:form id="beanUserActions">
+               <h:commandButton
+                  id="stopAction"
+                  value="#{gbms['ui.button.stop']}"
+                  action="#{gameController.enterFinish}" />
+            </h:form>
+
+         </h:panelGroup>
+
+      </h:panelGrid>
+
+   </h:panelGrid>
+
+   <h:form id="beanHiddenActions" style="display: none">
+      <h:commandButton
+         id="enterError"
+         action="#{gameController.enterError (gameController.state.error)}" />
+      <h:commandButton
+         id="enterFinish"
+         action="#{gameController.enterFinish}" />
+   </h:form>
+
+   <script type="text/javascript">
+      var MESSAGES = {};
+
+      <c:forEach items="#{jsms.keySet()}" var="key">
+      MESSAGES['#{key}'] = "#{jsms[key]}";
+      </c:forEach>
+   </script>
+
+</ui:composition>

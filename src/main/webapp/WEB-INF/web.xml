@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ "THE CAKE-WARE LICENSE" (Revision 42):                                   ~
+  ~                                                                          ~
+  ~     Milfie <mail@milfie.uu.me> wrote this file. As long as you retain    ~
+  ~ this notice you can do whatever you want with this stuff. If we meet     ~
+  ~ some day, and you think this stuff is worth it, you must buy me a cake   ~
+  ~ in return.                                                               ~
+  ~                                                                          ~
+  ~     Milfie.                                                              ~
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<web-app version = "3.1"
+         xmlns = "http://xmlns.jcp.org/xml/ns/javaee"
+         xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation = "
+            http://xmlns.jcp.org/xml/ns/javaee
+            http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+
+   <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     ~  General                                                              ~
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+   <display-name>Tetris EE</display-name>
+   <description>
+      An online tetris single player game on Java EE 7.
+   </description>
+
+   <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     ~  Context parameters                                                   ~
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+   <context-param>
+      <param-name>javax.faces.PROJECT_STAGE</param-name>
+      <param-value>Development</param-value>
+   </context-param>
+
+   <context-param>
+      <param-name>javax.faces.FACELETS_SKIP_COMMENTS</param-name>
+      <param-value>true</param-value>
+   </context-param>
+
+   <context-param>
+      <param-name>
+         org.apache.myfaces.STRICT_JSF_2_FACELETS_COMPATIBILITY
+      </param-name>
+      <param-value>true</param-value>
+   </context-param>
+
+   <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     ~  Filters                                                              ~
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+   <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     ~  Listeners                                                            ~
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+   <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     ~  Servlets                                                             ~
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+   <servlet>
+      <servlet-name>Faces Servlet</servlet-name>
+      <servlet-class>javax.faces.webapp.FacesServlet</servlet-class>
+      <load-on-startup>1</load-on-startup>
+   </servlet>
+
+   <servlet-mapping>
+      <servlet-name>Faces Servlet</servlet-name>
+      <url-pattern>*.xhtml</url-pattern>
+   </servlet-mapping>
+
+   <session-config>
+      <session-timeout>15</session-timeout>
+   </session-config>
+
+   <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     ~  Pages                                                                ~
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+   <welcome-file-list>
+      <welcome-file>index.xhtml</welcome-file>
+   </welcome-file-list>
+
+   <error-page>
+      <exception-type>
+         javax.faces.application.ViewExpiredException
+      </exception-type>
+      <location>/WEB-INF/error/expired.xhtml</location>
+   </error-page>
+
+   <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     ~  Security                                                             ~
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+   <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+     ~  Data source                                                          ~
+     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+   ${builtin.datasource.begin}
+   <data-source>
+      <name>java:app/Tetris_EE/DS</name>
+      <class-name>org.apache.derby.jdbc.ClientXADataSource</class-name>
+      <server-name>${builtin.datasource.host}</server-name>
+      <port-number>${builtin.datasource.port}</port-number>
+      <database-name>Tetris_EE</database-name>
+      <user>${builtin.datasource.username}</user>
+      <password>${builtin.datasource.password}</password>
+      <property>
+         <name>connectionAttributes</name>
+         <value>user=${builtin.datasource.username};password=${builtin.datasource.password};create=true</value>
+      </property>
+      <transactional>true</transactional>
+      <initial-pool-size>1</initial-pool-size>
+   </data-source>
+   ${builtin.datasource.end}
+
+   <!-- Stupid hack for TomEE -->
+   ${builtin.datasource.begin}
+   <data-source>
+      <name>java:app/Tetris_EE/DSNonJTA</name>
+      <class-name>org.apache.derby.jdbc.ClientXADataSource</class-name>
+      <server-name>${builtin.datasource.host}</server-name>
+      <port-number>${builtin.datasource.port}</port-number>
+      <database-name>Tetris_EE</database-name>
+      <user>${builtin.datasource.username}</user>
+      <password>${builtin.datasource.password}</password>
+      <property>
+         <name>connectionAttributes</name>
+         <value>user=${builtin.datasource.username};password=${builtin.datasource.password};create=true</value>
+      </property>
+      <transactional>false</transactional>
+      <initial-pool-size>0</initial-pool-size>
+   </data-source>
+   ${builtin.datasource.end}
+
+</web-app>

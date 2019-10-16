@@ -1,0 +1,82 @@
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ "THE CAKE-WARE LICENSE" (Revision 42):                                   ~
+  ~                                                                          ~
+  ~     Milfie <mail@milfie.uu.me> wrote this file. As long as you retain    ~
+  ~ this notice you can do whatever you want with this stuff. If we meet     ~
+  ~ some day, and you think this stuff is worth it, you must buy me a cake   ~
+  ~ in return.                                                               ~
+  ~                                                                          ~
+  ~     Milfie.                                                              ~
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<ui:composition xmlns="http://www.w3.org/1999/xhtml"
+                xmlns:h="http://xmlns.jcp.org/jsf/html"
+                xmlns:f="http://xmlns.jcp.org/jsf/core"
+                xmlns:ui="http://xmlns.jcp.org/jsf/facelets">
+
+   <h:panelGrid styleClass="component-form"
+                columns="1"
+                columnClasses="left">
+
+      <f:facet name="caption">
+         <h:outputText value="#{gbms['ui.high_scores.caption']}" />
+      </f:facet>
+
+      <h:messages layout="table"
+                  styleClass="jsf-messages"
+                  errorClass="jsf-messages-error"
+                  globalOnly="true"
+                  showDetail="false"
+                  showSummary="true" />
+
+      <h:outputText rendered="#{empty gameController.results}"
+                    value="#{gbms['ui.high_scores.empty']}" />
+
+      <h:dataTable styleClass="list-grid" align="center"
+                   rendered="#{not empty gameController.results}"
+                   value="#{gameController.results}" var="result">
+
+         <f:facet name="colgroups">
+            <h:panelGroup>
+               <col />
+               <col class="quartwidth" />
+               <col class="quartwidth" />
+               <col class="quartwidth" />
+            </h:panelGroup>
+         </f:facet>
+
+         <h:column>
+            <f:facet name="header">
+               <h:outputText value="#{gbms['ui.high_scores.name']}" />
+            </f:facet>
+            <h:outputText value="#{result.name}" />
+         </h:column>
+
+         <h:column>
+            <f:facet name="header">
+               <h:outputText value="#{gbms['ui.high_scores.date']}" />
+            </f:facet>
+            <h:outputText value="#{result.date}">
+               <f:convertDateTime pattern="dd/MM/yyyy HH:mm:ss" />
+            </h:outputText>
+         </h:column>
+
+         <h:column>
+            <f:facet name="header">
+               <h:outputText value="#{gbms['ui.high_scores.score']}" />
+            </f:facet>
+            <h:outputText value="#{result.score}" />
+         </h:column>
+
+         <h:column>
+            <f:facet name="header">
+               <h:outputText value="#{gbms['ui.high_scores.level']}" />
+            </f:facet>
+            <h:outputText value="#{result.level}" />
+         </h:column>
+
+      </h:dataTable>
+
+   </h:panelGrid>
+
+</ui:composition>

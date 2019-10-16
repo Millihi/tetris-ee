@@ -1,0 +1,11 @@
+.hg
+.git
+.idea
+target
+.hgignore
+.hgtags
+*.7z
+*.iml
+*.xls
+*.swp
+*~

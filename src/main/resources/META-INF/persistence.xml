@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  ~ "THE CAKE-WARE LICENSE" (Revision 42):                                   ~
+  ~                                                                          ~
+  ~     Milfie <mail@milfie.uu.me> wrote this file. As long as you retain    ~
+  ~ this notice you can do whatever you want with this stuff. If we meet     ~
+  ~ some day, and you think this stuff is worth it, you must buy me a cake   ~
+  ~ in return.                                                               ~
+  ~                                                                          ~
+  ~     Milfie.                                                              ~
+  ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+
+<persistence xmlns = "http://xmlns.jcp.org/xml/ns/persistence"
+             xmlns:xsi = "http://www.w3.org/2001/XMLSchema-instance"
+             version = "2.1"
+             xsi:schemaLocation = "
+                http://xmlns.jcp.org/xml/ns/persistence
+                http://xmlns.jcp.org/xml/ns/persistence/persistence_2_1.xsd">
+
+   <persistence-unit name = "Tetris_EEPU" transaction-type = "JTA">
+
+      <jta-data-source>java:app/Tetris_EE/DS</jta-data-source>
+      <non-jta-data-source>java:app/Tetris_EE/DSNonJTA</non-jta-data-source>
+
+      <exclude-unlisted-classes>false</exclude-unlisted-classes>
+
+      <properties>
+         <!-- EclipseLink settings -->
+         <property
+            name="eclipselink.target-database"
+            value="Derby"/>
+         <!--
+         <property
+            name = "eclipselink.ddl-generation"
+            value = "create-or-extend-tables" />
+         <property
+            name = "eclipselink.ddl-generation.output-mode"
+            value = "database" />
+         -->
+
+         <!-- OpenJPA settings -->
+         <property
+            name = "openjpa.Log"
+            value = "DefaultLevel=INFO, Runtime=INFO, Tool=INFO, SQL=TRACE" />
+         <property
+            name = "openjpa.ConnectionFactoryProperties"
+            value = "PrintParameters=true" />
+         <!-- http://apache-database.10148.n7.nabble.com/SYSIBM-schema-td74269.html -->
+         <property
+            name = "openjpa.jdbc.DBDictionary"
+            value = "derby(NextSequenceQuery=&quot;SELECT NEXT VALUE FOR {0} FROM (VALUES 1) V&quot;)" />
+
+         <!-- Hibernate settings -->
+         <property
+            name = "hibernate.dialect"
+            value = "org.hibernate.dialect.DerbyTenSixDialect" />
+         <property
+            name = "hibernate.hbm2ddl.import_files_sql_extractor"
+            value = "org.hibernate.tool.hbm2ddl.MultipleLinesSqlCommandExtractor" />
+         <property
+            name = "hibernate.hbm2ddl.auto"
+            value = "update" />
+      </properties>
+
+   </persistence-unit>
+
+</persistence>
