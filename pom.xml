@@ -47,6 +47,12 @@
       <build.profiles.exclusive>
          Development, Production
       </build.profiles.exclusive>
+      <build.captcha.file.captchaAuth>
+         ${project.basedir}/captcha.auth
+      </build.captcha.file.captchaAuth>
+      <build.captcha.file.clientServiceJar>
+         ${project.build.directory}/captcha-client-service.jar
+      </build.captcha.file.clientServiceJar>
    </properties>
 
    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -151,7 +157,7 @@
          </plugin>
 
          <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-          ~~  Check whether profiles are mutually exclusive                 ~~
+          ~~  Check whether selected build profiles are correct.            ~~
           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -160,7 +166,7 @@
 
             <executions>
                <execution>
-                  <id>enforce-one-of-exclusive-profiles-is-active</id>
+                  <id>enforce-initial-verification</id>
                   <goals>
                      <goal>enforce</goal>
                   </goals>
@@ -189,7 +195,7 @@
                         </evaluateBeanshell>
                         <requireFilesExist>
                            <files>
-                              <file>${project.basedir}/captcha.auth</file>
+                              <file>${build.captcha.file.captchaAuth}</file>
                            </files>
                            <message>
                               The wsimport authfile was not found in the project root.
@@ -212,7 +218,7 @@
          </plugin>
 
          <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-          ~~  Generate web services classes from wsdl file                  ~~
+          ~~  Generate web services classes from remote wsdl file.          ~~
           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
          <plugin>
             <groupId>org.codehaus.mojo</groupId>
@@ -238,20 +244,22 @@
                      </wsdlUrls>
                      <args>
                         <arg>-Xauthfile</arg>
-                        <arg>"${project.basedir}/captcha.auth"</arg>
+                        <arg>"${build.captcha.file.captchaAuth}"</arg>
                         <arg>-clientjar</arg>
-                        <arg>"${project.build.directory}/captcha-client-service.jar"</arg>
+                        <arg>"${build.captcha.file.clientServiceJar}"</arg>
                      </args>
                      <xnocompile>false</xnocompile>
-                     <keep>false</keep>
+                     <keep>true</keep>
                   </configuration>
                </execution>
             </executions>
          </plugin>
 
          <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-          ~~ Unjar the JAX-WS client JAR created in the jaxws-maven-plugin  ~~
-          ~~ to the WAR's classes folder                                    ~~
+          ~~ Delete the JAX-WS client JAR which additionally created by the ~~
+          ~~ jaxws-maven-plugin.                                            ~~
+          ~~ Copy WSDL file to the root of WAR because jBoss do not want    ~~
+          ~~ to support classpath:/ in the @WebServiceRef                              ~~
           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
@@ -261,11 +269,12 @@
             <executions>
                <execution>
                   <phase>process-resources</phase>
+                  <goals>
+                     <goal>run</goal>
+                  </goals>
                   <configuration>
                      <target>
-                        <unzip
-                           src = "${project.build.directory}/captcha-client-service.jar"
-                           dest = "${project.build.outputDirectory}" />
+                        <delete file = "${build.captcha.file.clientServiceJar}" />
                         <copy todir = "${project.build.directory}/${project.build.finalName}/META-INF">
                            <fileset
                               dir = "${project.build.outputDirectory}/META-INF"
@@ -273,13 +282,13 @@
                         </copy>
                      </target>
                   </configuration>
-                  <goals>
-                     <goal>run</goal>
-                  </goals>
                </execution>
             </executions>
          </plugin>
 
+         <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+          ~~ Strict compiling.                                              ~~
+          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-compiler-plugin</artifactId>
@@ -293,6 +302,9 @@
             </configuration>
          </plugin>
 
+         <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+          ~~ Useful console output.                                         ~~
+          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-surefire-plugin</artifactId>
@@ -303,6 +315,9 @@
             </configuration>
          </plugin>
 
+         <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+          ~~ Filter deployment descriptors of WAR.                          ~~
+          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
          <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-war-plugin</artifactId>
@@ -312,7 +327,8 @@
                <filters>
                   <filter>${app.config}</filter>
                </filters>
-               <filteringDeploymentDescriptors>true
+               <filteringDeploymentDescriptors>
+                  true
                </filteringDeploymentDescriptors>
             </configuration>
          </plugin>
