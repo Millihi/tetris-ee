@@ -41,7 +41,12 @@
       <builtin.datasource.begin>&lt;!-- ON --&gt;</builtin.datasource.begin>
       <builtin.datasource.end>&lt;!-- ON --&gt;</builtin.datasource.end>
       <config.type>default</config.type>
+      <app.config.default>application.default.properties</app.config.default>
       <app.config>application.${config.type}.properties</app.config>
+      <app.project.stage>Development</app.project.stage>
+      <build.profiles.exclusive>
+         Development, Production
+      </build.profiles.exclusive>
    </properties>
 
    <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
@@ -51,19 +56,23 @@
    <profiles>
       <profile>
          <id>Development</id>
-         <activation>
-            <activeByDefault>true</activeByDefault>
-         </activation>
          <properties>
             <config.type>dev</config.type>
          </properties>
       </profile>
 
       <profile>
+         <id>Production</id>
+         <properties>
+            <config.type>prod</config.type>
+         </properties>
+      </profile>
+
+      <profile>
          <id>ExternalDS</id>
          <properties>
-            <builtin.datasource.begin>&lt;!-- OFF </builtin.datasource.begin>
-            <builtin.datasource.end> OFF --&gt;</builtin.datasource.end>
+            <builtin.datasource.begin>&lt;!-- OFF</builtin.datasource.begin>
+            <builtin.datasource.end>OFF --&gt;</builtin.datasource.end>
          </properties>
       </profile>
    </profiles>
@@ -118,6 +127,91 @@
 
       <plugins>
          <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+          ~~  Load build properties                                         ~~
+          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+         <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>properties-maven-plugin</artifactId>
+            <version>1.0.0</version>
+
+            <executions>
+               <execution>
+                  <phase>initialize</phase>
+                  <goals>
+                     <goal>read-project-properties</goal>
+                  </goals>
+                  <configuration>
+                     <files>
+                        <file>${app.config.default}</file>
+                        <file>${app.config}</file>
+                     </files>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+
+         <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+          ~~  Check whether profiles are mutually exclusive                 ~~
+          ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
+         <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-enforcer-plugin</artifactId>
+            <version>3.0.0-M2</version>
+
+            <executions>
+               <execution>
+                  <id>enforce-one-of-exclusive-profiles-is-active</id>
+                  <goals>
+                     <goal>enforce</goal>
+                  </goals>
+                  <configuration>
+                     <rules>
+                        <evaluateBeanshell>
+                           <condition>
+                           <![CDATA[
+                              String data = "${project.activeProfiles}";
+                              String[] list = "${build.profiles.exclusive}"
+                                 .split ("\\s*,+\\s*");
+                              int count = 0;
+
+                              for (String prof : list) {
+                                 if (data.indexOf ("id: " + prof + ",") >= 0) {
+                                    ++count;
+                                 }
+                              }
+
+                              return (count == 1);
+                           ]]>
+                           </condition>
+                           <message>
+                              Incorrect build mode. You must specify one of this profiles: ${build.profiles.exclusive}.
+                           </message>
+                        </evaluateBeanshell>
+                        <requireFilesExist>
+                           <files>
+                              <file>${project.basedir}/captcha.auth</file>
+                           </files>
+                           <message>
+                              The wsimport authfile was not found in the project root.
+                           </message>
+                        </requireFilesExist>
+                        <requireFilesExist>
+                           <files>
+                              <file>${project.basedir}/${app.config}</file>
+                           </files>
+                           <message>
+                              The application config file ${app.config} was not found in the project root.
+                           </message>
+                        </requireFilesExist>
+                     </rules>
+                     <fail>true</fail>
+                     <failFast>true</failFast>
+                  </configuration>
+               </execution>
+            </executions>
+         </plugin>
+
+         <!--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
           ~~  Generate web services classes from wsdl file                  ~~
           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~-->
          <plugin>
@@ -140,9 +234,7 @@
                   <configuration>
                      <verbose>false</verbose>
                      <wsdlUrls>
-                        <wsdlUrl>
-                           http://127.0.0.1:8080/captcha/CaptchaClientService?wsdl
-                        </wsdlUrl>
+                        <wsdlUrl>${captcha.wsdl.url}</wsdlUrl>
                      </wsdlUrls>
                      <args>
                         <arg>-Xauthfile</arg>
@@ -151,7 +243,7 @@
                         <arg>"${project.build.directory}/captcha-client-service.jar"</arg>
                      </args>
                      <xnocompile>false</xnocompile>
-                     <keep>true</keep>
+                     <keep>false</keep>
                   </configuration>
                </execution>
             </executions>
@@ -174,10 +266,10 @@
                         <unzip
                            src = "${project.build.directory}/captcha-client-service.jar"
                            dest = "${project.build.outputDirectory}" />
-                        <copy todir="${project.build.directory}/${project.build.finalName}/META-INF">
+                        <copy todir = "${project.build.directory}/${project.build.finalName}/META-INF">
                            <fileset
-                              dir="${project.build.outputDirectory}/META-INF"
-                              includes="wsdl/*" />
+                              dir = "${project.build.outputDirectory}/META-INF"
+                              includes = "wsdl/*" />
                         </copy>
                      </target>
                   </configuration>
@@ -220,7 +312,8 @@
                <filters>
                   <filter>${app.config}</filter>
                </filters>
-               <filteringDeploymentDescriptors>true</filteringDeploymentDescriptors>
+               <filteringDeploymentDescriptors>true
+               </filteringDeploymentDescriptors>
             </configuration>
          </plugin>
       </plugins>
